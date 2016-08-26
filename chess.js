@@ -1040,7 +1040,7 @@ var Chess = function(fen) {
     return _to_string(function(piece, color) {
       if (color === BLACK) {
         switch (piece) {
-          case PAWN: return '♝';
+          case PAWN: return '♟';
           case KNIGHT: return '♞';
           case BISHOP: return '♝';
           case ROOK: return '♜';
