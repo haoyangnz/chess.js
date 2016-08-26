@@ -1029,6 +1029,13 @@ var Chess = function(fen) {
   }
 
   function ascii() {
+    return _to_string(function(piece, color) {
+      return (color === WHITE) ? piece.toUpperCase() : piece.toLowerCase()
+    })
+  }
+
+  // renderPiece: a function that transforms the piece (e.g. p) for a color into a rendered character (e.g. P or ♗)
+  function _to_string(renderPiece) {
     var s = '   +------------------------+\n';
     for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
       /* display the rank */
@@ -1042,8 +1049,7 @@ var Chess = function(fen) {
       } else {
         var piece = board[i].type;
         var color = board[i].color;
-        var symbol = (color === WHITE) ?
-                     piece.toUpperCase() : piece.toLowerCase();
+        var symbol = renderPiece(piece, color);
         s += ' ' + symbol + ' ';
       }
 
