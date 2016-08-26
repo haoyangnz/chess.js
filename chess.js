@@ -1028,13 +1028,15 @@ var Chess = function(fen) {
     return '';
   }
 
-  function ascii() {
+  // side: Whether to show black or white on the bottom. If not passed in shows white on the bottom by default.
+  function ascii(side) {
     return _to_string(function(piece, color) {
       return (color === WHITE) ? piece.toUpperCase() : piece.toLowerCase()
-    })
+    }, side)
   }
 
-  function unicode() {
+  // side: Whether to show black or white on the bottom. If not passed in shows white on the bottom by default.
+  function unicode(side) {
     return _to_string(function(piece, color) {
       if (color === BLACK) {
         switch (piece) {
@@ -1056,35 +1058,48 @@ var Chess = function(fen) {
           case KING: return '♔';
         }
       }
-    })
+    }, side)
   }
 
   // renderPiece: a function that transforms the piece (e.g. p) for a color into a rendered character (e.g. P or ♗)
-  function _to_string(renderPiece) {
+  // side: Whether to show black or white on the bottom. If not passed in shows white on the bottom by default.
+  function _to_string(renderPiece, side) {
+    if (!side) side = WHITE;
     var s = '   +------------------------+\n';
-    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+    var newRow = true;
+    var currentColumn = 0;
+    for (var i = (side === WHITE ? SQUARES.a8 : SQUARES.h1); side === WHITE && i <= SQUARES.h1 || side === BLACK && i >= SQUARES.a8;) {
+
       /* display the rank */
-      if (file(i) === 0) {
+      if (newRow) {
         s += ' ' + '87654321'[rank(i)] + ' |';
+        newRow = false;
+        continue;
       }
 
       /* empty piece */
       if (board[i] == null) {
         s += ' . ';
-      } else {
+      }
+      else {
         var piece = board[i].type;
         var color = board[i].color;
         var symbol = renderPiece(piece, color);
         s += ' ' + symbol + ' ';
       }
+      currentColumn++;
+      if (side === WHITE) i++
+      else i--
 
-      if ((i + 1) & 0x88) {
+      if (currentColumn == 8) {
         s += '|\n';
-        i += 8;
+        i += 8 * (side === WHITE ? 1 : -1);
+        newRow = true;
+        currentColumn = 0;
       }
     }
     s += '   +------------------------+\n';
-    s += '     a  b  c  d  e  f  g  h\n';
+    s += (side === WHITE ? '     a  b  c  d  e  f  g  h\n' : '     h  g  f  e  d  c  b  a\n');
 
     return s;
   }
@@ -1547,12 +1562,12 @@ var Chess = function(fen) {
       return set_header(arguments);
     },
 
-    ascii: function() {
-      return ascii();
+    ascii: function(side) {
+      return ascii(side);
     },
 
-    unicode: function() {
-      return unicode();
+    unicode: function(side) {
+      return unicode(side);
     },
 
     turn: function() {
