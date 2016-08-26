@@ -1034,6 +1034,31 @@ var Chess = function(fen) {
     })
   }
 
+  function unicode() {
+    return _to_string(function(piece, color) {
+      if (color === BLACK) {
+        switch (piece) {
+          case PAWN: return '♝';
+          case KNIGHT: return '♞';
+          case BISHOP: return '♝';
+          case ROOK: return '♜';
+          case QUEEN: return '♛';
+          case KING: return '♚';
+        }
+      }
+      else {
+        switch (piece) {
+          case PAWN: return '♙';
+          case KNIGHT: return '♘';
+          case BISHOP: return '♗';
+          case ROOK: return '♖';
+          case QUEEN: return '♕';
+          case KING: return '♔';
+        }
+      }
+    })
+  }
+
   // renderPiece: a function that transforms the piece (e.g. p) for a color into a rendered character (e.g. P or ♗)
   function _to_string(renderPiece) {
     var s = '   +------------------------+\n';
@@ -1524,6 +1549,10 @@ var Chess = function(fen) {
 
     ascii: function() {
       return ascii();
+    },
+
+    unicode: function() {
+      return unicode();
     },
 
     turn: function() {
